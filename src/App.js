@@ -85,7 +85,6 @@ export default function App() {
   async function excluirProduto(data) {
     const realm = await getRealm();
     const ID = data._id;
-    console.log(ID);
 
     realm.write(() => {
       if (realm.objects('Products').filtered('_id =' + ID).length > 0) {
@@ -117,7 +116,6 @@ export default function App() {
     setProduto('');
     setDoseha('');
     setEditableInput(true);
-    console.log(listaVazia);
     realm.close();
   }
 
@@ -129,8 +127,9 @@ export default function App() {
       const data = realm.objects("Products").toJSON();
 
       setLista(data);
-      console.log("Adicionado=>", lista);
     }
+    loadProdutos();
+    console.log(currentDate);
 
   }, [])
 
@@ -176,30 +175,30 @@ export default function App() {
 </body>
 </html>
 `;
-  async function createPDF() {
-    const options = {
-      html: html,
-      fileName: `aeroaplic-${fazenda}`,
-      directory: 'Documents',
-    };
-
-    const file = await RNHTMLtoPDF.convert(options).then(file => {
-      if (file) {
-        Compartilhar(file);
-      }
-    });
-    // console.log(file.filePath);
-    alert(file.filePath);
+  async function Compartilhar(fileUrl) {
+    try {
+      await Share.open({ url: fileUrl });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  async function Compartilhar(file) {
-    Share.open(file)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        err && console.log(err);
+  async function GerarPDF() {
+    try {
+      Share;
+      const options = {
+        html: html,
+        fileName: `aeroaplic-${area}`,
+        directory: `Documents`
+      };
+      const file = await RNHTMLtoPDF.convert(options).then(file => {
+        if (file.filePath) {
+          Compartilhar(file.filePath);
+        }
       });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -287,7 +286,7 @@ export default function App() {
 
         <View style={styles.containerAdd}>
           <Button title="Adicionar" color='#7CC81C' onPress={AddNovoProduto} />
-          <Button title="Compartilhar" color='#7CC81C' onPress={Compartilhar} />
+          <Button title="Compartilhar" color='#7CC81C' onPress={GerarPDF} />
           <Button title="Novo" color='#7CC81C' onPress={resetProdutos} />
         </View>
 
