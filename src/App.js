@@ -28,6 +28,8 @@ export default function App() {
   const [fazenda, setFazenda] = useState('');
   const [area, setArea] = useState('');
   const [havoo, setHavoo] = useState('');
+  const [editableInput, setEditableInput] = useState(true);
+
 
   const fullaplic = parseInt(area / havoo);
   const unfullaplic = parseInt(area - (fullaplic * havoo));
@@ -71,6 +73,7 @@ export default function App() {
       setLista(dadosAlterados)
       setProduto('');
       setDoseha('');
+      setEditableInput(false);
       alert("Adicionado com sucesso!")
     } catch (err) {
       alert(err);
@@ -113,6 +116,7 @@ export default function App() {
     setHavoo('');
     setProduto('');
     setDoseha('');
+    setEditableInput(true);
     console.log(listaVazia);
     realm.close();
   }
@@ -214,6 +218,7 @@ export default function App() {
             placeholder="Nome da fazenda"
             placeholderTextColor="#000"
             onChangeText={(text) => setFazenda(text)}
+            editable={editableInput}
           />
         </View>
 
@@ -230,6 +235,7 @@ export default function App() {
             placeholderTextColor="#000"
             value={area}
             onChangeText={(number) => setArea(number)}
+            editable={editableInput}
           />
 
           <TextInput
@@ -239,6 +245,7 @@ export default function App() {
             placeholderTextColor="#000"
             value={havoo}
             onChangeText={(number) => setHavoo(number)}
+            editable={editableInput}
           />
         </View>
 
