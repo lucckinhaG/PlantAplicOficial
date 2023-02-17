@@ -11,13 +11,12 @@ import {
   Pressable,
   Keyboard,
   KeyboardAvoidingView,
-  Button
+  Button,
+  Alert,
 } from 'react-native';
-import uuid from 'react-native-uuid';
 import moment from 'moment';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import Share from 'react-native-share';
-
 
 import getRealm from './services/realm';
 import Lista from './pages/Lista';
@@ -41,6 +40,7 @@ export default function App() {
   const totalaplic = (area * doseha).toFixed(2);
 
   const currentDate = moment().format('LLL');
+  const momentShare = new Date().getTime();
 
 
   const [prod, setProd] = useState([])
@@ -74,6 +74,7 @@ export default function App() {
       setProduto('');
       setDoseha('');
       setEditableInput(false);
+      Keyboard.dismiss();
       alert("Adicionado com sucesso!")
     } catch (err) {
       alert(err);
@@ -129,57 +130,68 @@ export default function App() {
       setLista(data);
     }
     loadProdutos();
-    console.log(currentDate);
 
   }, [])
 
 
   const html = `
 <html>
-<head>
-  <meta name="viewport" content=width=device-width, initial-scale=1.0,
-  maxium-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
-</head>
-<body>
-  <header>
-    <h1>Calculo para aplicação</h1>
-  </header>
-  <h1>Dados da fazenda/lote</h1>
-  <p>Data: ${currentDate}</p>
-  <p>Fazenda/Lote: ${fazenda}</p>
-  <p> Área / hectáre: ${area} </p>
-  <p> Hectáre p/ Aplic: ${havoo} </p>
-  <p> Aplicações com carga cheia: ${fullaplic} </p>
-  <p> Aplicação com carga incompleta: ${unfullaplic} </p>
-  <h2>Produtos Utilizados</h1>
-  <table>
-    <tr>
-      <th>Produto</th>
-      <th>Dose/ha</th>
-      <th>Carga<br>Cheia</th>
-      <th>Carga<br>Incompleta</th>
-    </tr>
-    ${lista
+  <head>
+      <meta charset="utf-8">
+      <title>Invoice</title>
+      <link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+      <style>
+        ${htmlStyles}
+      </style>
+    </head>
+  <body>
+    <header>
+      <h1>PlantAplic</h1>
+      <address>
+        <h2>Dados da fazenda/lote</h2>
+        <h3>Data: ${currentDate}</h3>
+        <h3>Fazenda/Lote: ${fazenda}</h3>
+        <h3> Área / hectáre: ${area}há </h3>
+        <h3> Hectáre p/ Aplic: ${havoo} há/aplicação </h3>
+        <h3> Quantidade de cargas: ${fullaplic} </h3>
+        <h3> Uma carga de: ${unfullaplic} </h3>
+      </address>
+    </header>
+    <h2>Produtos Utilizados</h1>
+    <table class="inventory">
+      <thead>
+        <tr>
+          <th> <Span> Produto </Span> </th>
+          <th> <Span> Dose/ha </Span> </th>
+          <th> <Span> Carga Cheia </Span> </th>
+          <th> <Span> Carga Incompleta </Span> </th>
+          <th> <Span> Total da Área </Span> </th>
+        </tr>
+      <thead>
+      ${lista
       .map(
         data => `
-      <tr>
-        <td>${data.produto}}</td>
-        <td>${data.doseha}</td>
-        <td>${data.completa}</td>
-        <td>${data.incompleta}</td>
-      </tr>
-    `,
+      <tbody>
+        <tr>
+          <td> <span> ${data.produto} </span> </td>
+          <td> <span> ${data.doseha} </span> </td>
+          <td> <span> ${data.completa} </span> </td>
+          <td> <span> ${data.incompleta} </span> </td>
+          <td> <span> ${data.totalaplic} </span> </td>
+        </tr>
+      </tbody>
+      `,
       )
       .join('')}
-  </table>
-</body>
+    </table>
+  </body>
 </html>
 `;
-  async function Compartilhar(fileUrl) {
+
+  async function CompartilharPDF(fileUrl) {
     try {
-      await Share.open({ url: fileUrl });
-    } catch (err) {
-      console.log(err);
+      await Share.open({ url: 'file://' + fileUrl });
+    } catch (error) {
     }
   }
 
@@ -188,16 +200,16 @@ export default function App() {
       Share;
       const options = {
         html: html,
-        fileName: `aeroaplic-${area}`,
-        directory: `Documents`
+        fileName: `pdf-plantaplic`,
+        base64: false,
       };
       const file = await RNHTMLtoPDF.convert(options).then(file => {
         if (file.filePath) {
-          Compartilhar(file.filePath);
+          CompartilharPDF(file.filePath);
+          console.log(file.filePath);
         }
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
     }
   }
 
@@ -487,3 +499,53 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
 });
+
+const htmlStyles = `
+  h1 { 
+    font: bold 100% sans-serif;
+    letter-spacing: 0.5em;
+    text-align: center;
+    text-transform: uppercase;
+    }
+/* table */
+table { font-size: 75%; table-layout: fixed; width: 100%; }
+table { border-collapse: separate; border-spacing: 2px; }
+th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }
+th, td { border-radius: 0.25em; border-style: solid; }
+th { background: #EEE; border-color: #BBB; }
+td { border-color: #DDD; }
+
+/* header */
+header { margin: 0 0 3em; }
+header:after { clear: both; content: ""; display: table; }
+header h1 { background: #7CC81C; border-radius: 0.25em; color: #FFF; margin: 0 0 1em; padding: 0.5em 0; }
+header address { float: left; font-size: 75%; font-style: normal; line-height: 1.25; margin: 0 1em 1em 0; }
+header address p { margin: 0 0 0.25em; }
+header span, header img { display: block; float: right; }
+header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; position: relative; }
+header img { max-height: 100%; max-width: 100%; }
+
+/* article */
+article, article address, table.meta, table.inventory { margin: 0 0 3em; }
+article:after { clear: both; content: ""; display: table; }
+article h1 { clip: rect(0 0 0 0); position: absolute; }
+article address { float: left; font-size: 125%; font-weight: bold; }
+
+/* table meta & balance */
+table.meta, table.balance { float: right; width: 36%; }
+table.meta:after, table.balance:after { clear: both; content: ""; display: table; }
+
+/* table meta */
+table.meta th { width: 40%; }
+table.meta td { width: 60%; }
+
+/* table items */
+table.inventory { clear: both; width: 100%; }
+table.inventory th { font-weight: bold; text-align: center; }
+table.inventory td:nth-child(1) { width: 26%; }
+table.inventory td:nth-child(2) { width: 38%; }
+table.inventory td:nth-child(3) { text-align: right; width: 12%; }
+table.inventory td:nth-child(4) { text-align: right; width: 12%; }
+table.inventory td:nth-child(5) { text-align: right; width: 12%; }
+
+`;

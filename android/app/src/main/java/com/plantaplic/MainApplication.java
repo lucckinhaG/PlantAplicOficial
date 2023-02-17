@@ -1,4 +1,4 @@
-package com.aeroaplic;
+package com.plantaplic;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

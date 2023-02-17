@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.aeroaplic"
+    namespace "com.plantaplic"
     defaultConfig {
-        applicationId "com.aeroaplic"
+        applicationId "com.plantaplic"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

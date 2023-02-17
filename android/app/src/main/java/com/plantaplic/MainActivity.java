@@ -1,4 +1,4 @@
-package com.aeroaplic;
+package com.plantaplic;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
