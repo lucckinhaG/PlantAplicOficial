@@ -13,4 +13,4 @@ Esse app ainda está em versão de testes, contendo poucas funções,
 sendo elas:
  -> Calcular quantidade de aplicações e doses de produtos para cada situação;
  -> Listar todos os produtos, e as dosagens calculadas;
- -> Compartilhar um simples relatório com as informações inseridas.
+ -> Compartilhar um simples relatório em PDF com as informações inseridas.
