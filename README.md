@@ -1,4 +1,4 @@
-# AeroAplicOficial
+# PlantAplicOficial
 Olá pessoal, venho compartilhar com vocês esse projeto
 que estive trabalhando há cerca de 4 meses,
 aprendendo do "Zero", finalmente a primeira versão está concluída,
