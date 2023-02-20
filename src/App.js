@@ -26,16 +26,16 @@ import Lista from './pages/Lista';
 export default function App() {
   const [fazenda, setFazenda] = useState('');
   const [area, setArea] = useState('');
-  const [havoo, setHavoo] = useState('');
+  const [haaplic, setHaaplic] = useState('');
   const [editableInput, setEditableInput] = useState(true);
 
 
-  const fullaplic = parseInt(area / havoo);
-  const unfullaplic = parseInt(area - (fullaplic * havoo));
+  const fullaplic = parseInt(area / haaplic);
+  const unfullaplic = (area - (fullaplic * haaplic)).toFixed(2);
 
   const [produto, setProduto] = useState('');
   const [doseha, setDoseha] = useState('');
-  const completa = (havoo * doseha).toFixed(2);
+  const completa = (haaplic * doseha).toFixed(2);
   const incompleta = (unfullaplic * doseha).toFixed(2);
   const totalaplic = (area * doseha).toFixed(2);
 
@@ -49,7 +49,7 @@ export default function App() {
 
 
   async function AddNovoProduto() {
-    if (fazenda === '' || area === '' || havoo === '' || produto === '' || doseha === '') {
+    if (fazenda === '' || area === '' || haaplic === '' || produto === '' || doseha === '') {
       alert('Preencha todos os campos!');
       return;
     }
@@ -152,7 +152,7 @@ export default function App() {
         <h3>Data: ${currentDate}</h3>
         <h3>Fazenda/Lote: ${fazenda}</h3>
         <h3> Área / hectáre: ${area}há </h3>
-        <h3> Hectáre p/ Aplic: ${havoo} há/aplicação </h3>
+        <h3> Hectáre p/ Aplic: ${haaplic} há/aplicação </h3>
         <h3> Quantidade de cargas: ${fullaplic} </h3>
         <h3> Uma carga de: ${unfullaplic} </h3>
       </address>
@@ -254,8 +254,8 @@ export default function App() {
             keyboardType="numeric"
             placeholder="Hectáres por aplicação"
             placeholderTextColor="#000"
-            value={havoo}
-            onChangeText={(number) => setHavoo(number)}
+            value={haaplic}
+            onChangeText={(number) => setHaaplic(number)}
             editable={editableInput}
           />
         </View>
