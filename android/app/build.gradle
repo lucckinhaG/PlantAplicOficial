@@ -98,8 +98,8 @@ android {
         applicationId "com.plantaplic"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "3.0"
+        versionCode 4
+        versionName "4.0"
     }
 
     splits {
@@ -175,5 +175,12 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'FontAwesome5_Brands.ttf', 'FontAwesome5_Regular.ttf', 'FontAwesome5_Solid.ttf' ] // Name of the font files you want to copy
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
